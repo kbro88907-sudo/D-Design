@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+  <defs>
+    <!-- Background Gradient matching the logo: 0% #005550 -> 55% #1B8F86 -> 100% #3AF0E4 -->
+    <linearGradient id="logoBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#005550"/>
+      <stop offset="55%" stop-color="#1B8F86"/>
+      <stop offset="100%" stop-color="#3AF0E4"/>
+    </linearGradient>
+
+    <!-- Front Face Gradient: Subtle soft depth across #54DDDE -->
+    <linearGradient id="frontFaceGrad" x1="0%" y1="0%" x2="20%" y2="100%">
+      <stop offset="0%" stop-color="#64E5E6"/>
+      <stop offset="100%" stop-color="#47D4D5"/>
+    </linearGradient>
+
+    <!-- Highlight Gloss Gradient -->
+    <linearGradient id="glossGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#8EFAF4" stop-opacity="0.2"/>
+    </linearGradient>
+
+    <!-- Inner Hole Shadow Gradient -->
+    <linearGradient id="innerDepthGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#083B3A" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#126863" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="512" height="512" rx="96" fill="url(#logoBgGrad)"/>
+
+  <!-- 3D Shadow / Extrusion Layer (Dark Ink #083B3A) -->
+  <!-- Outer Extrusion -->
+  <path d="M 125,95
+           L 295,95
+           C 395,95 465,165 465,270
+           C 465,375 395,445 295,445
+           L 125,445
+           C 105,445 90,430 90,410
+           L 90,130
+           C 90,110 105,95 125,95 Z"
+        fill="#083B3A"
+        transform="translate(26, 26)" />
+
+  <!-- Inner Counter Hole Extrusion -->
+  <path d="M 205,175
+           L 265,175
+           C 315,175 345,210 345,270
+           C 345,330 315,365 265,365
+           L 205,365
+           C 195,365 188,358 188,348
+           L 188,192
+           C 188,182 195,175 205,175 Z"
+        fill="#005550"
+        transform="translate(26, 26)" />
+
+  <!-- Front Face: 3D Letter "D" (#54DDDE) -->
+  <!-- Outer D Path with compound cutout for Counter Hole -->
+  <path fill-rule="evenodd"
+        d="M 130,75
+           L 295,75
+           C 398,75 468,148 468,256
+           C 468,364 398,437 295,437
+           L 130,437
+           C 108,437 92,421 92,399
+           L 92,113
+           C 92,91 108,75 130,75 Z
+           M 205,158
+           L 268,158
+           C 318,158 350,195 350,256
+           C 350,317 318,354 268,354
+           L 205,354
+           C 194,354 186,346 186,335
+           L 186,177
+           C 186,166 194,158 205,158 Z"
+        fill="url(#frontFaceGrad)" />
+
+  <!-- Inner Hole 3D Depth Cast Shadow (Top and Left inner walls) -->
+  <path d="M 186,158
+           L 245,158
+           C 255,158 268,162 268,162
+           L 242,185
+           L 212,185
+           L 212,330
+           L 186,354
+           Z"
+        fill="#083B3A"
+        opacity="0.8" />
+
+  <!-- Glossy Highlights (The signature shiny arcs in the 3D logo) -->
+  <!-- 1. Top-Left Outer Shoulder Arc Highlight -->
+  <path d="M 112,150
+           C 106,128 116,102 142,92
+           C 170,82 225,82 285,82"
+        fill="none"
+        stroke="url(#glossGrad)"
+        stroke-width="12"
+        stroke-linecap="round" />
+
+  <!-- 2. Inner Loop Bottom-Right Gloss Arc -->
+  <path d="M 338,295
+           C 334,325 310,345 272,348
+           L 220,348"
+        fill="none"
+        stroke="#8EFAF4"
+        stroke-width="10"
+        stroke-linecap="round"
+        opacity="0.75" />
+
+  <!-- 3. Tiny crisp white apex reflections -->
+  <circle cx="122" cy="118" r="4" fill="#FFFFFF" opacity="0.9" />
+</svg>

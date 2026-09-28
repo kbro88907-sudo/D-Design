@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #54DDDE;
+  --primary-bright: #3AF0E4;
+  --teal-mid: #1B8F86;
+  --teal-deep: #005550;
+  --ink: #083B3A;
+  --surface: #F2FFFE;
+  --white: #FFFFFF;
+
+  --status-new: #54DDDE;
+  --status-in-progress: #F5B942;
+  --status-delivered: #1B8F86;
+  --status-completed: #2ECC71;
+}
+
+/* Custom 3D Logo-inspired Utilities */
+.hero-gradient {
+  background: linear-gradient(180deg, #005550 0%, #1B8F86 55%, #3AF0E4 100%);
+}
+
+.hero-surface-gradient {
+  background: linear-gradient(180deg, #005550 0%, #0d5f5a 40%, #083B3A 100%);
+}
+
+.card-3d-shadow {
+  box-shadow: 8px 8px 0px rgba(8, 59, 58, 0.18);
+}
+
+.card-3d-shadow-dark {
+  box-shadow: 8px 8px 0px rgba(0, 36, 34, 0.7);
+}
+
+.btn-3d-primary {
+  background-color: var(--primary);
+  color: var(--ink);
+  font-weight: 800;
+  border-radius: 20px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 4px 4px 0px var(--ink);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-3d-primary:hover {
+  background-color: var(--primary-bright);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--ink);
+}
+
+.btn-3d-primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--ink);
+}
+
+.btn-3d-secondary {
+  background-color: transparent;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 20px;
+  border: 2px solid var(--teal-mid);
+  border-top: 2px solid var(--primary);
+  box-shadow: 4px 4px 0px rgba(8, 59, 58, 0.4);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-3d-secondary:hover {
+  background-color: rgba(84, 221, 222, 0.12);
+  border-color: var(--primary-bright);
+  color: var(--primary-bright);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px rgba(8, 59, 58, 0.5);
+}
+
+.card-gloss-top {
+  position: relative;
+}
+
+.card-gloss-top::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 24px;
+  right: 24px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  border-radius: 9999px;
+  pointer-events: none;
+}

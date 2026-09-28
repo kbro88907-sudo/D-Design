@@ -1,0 +1,6 @@
+{
+  "name": "بورتفوليو المصمم المحترف | استوديو التصميم الجرافيكي",
+  "description": "موقع متكامل لمصمم جرافيك حر مع معرض أعمال، باقات الأسعار، مكتبة البرومتات، ولوحة إدارة متقدمة وتوزيع المهام للمصممين.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

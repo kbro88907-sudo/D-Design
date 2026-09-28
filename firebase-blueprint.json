@@ -1,0 +1,245 @@
+{
+  "entities": {
+    "PricingPackage": {
+      "title": "PricingPackage",
+      "description": "Represents a pricing package offered to clients",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 200 },
+        "badge": { "type": "string", "maxLength": 100 },
+        "originalPrice": { "type": "number" },
+        "price": { "type": "number" },
+        "description": { "type": "string", "maxLength": 1000 },
+        "features": { "type": "array" },
+        "isPopular": { "type": "boolean" },
+        "orderIndex": { "type": "number" },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["id", "name", "price", "description"]
+    },
+    "TemporaryOffer": {
+      "title": "TemporaryOffer",
+      "description": "Represents a time-limited promotional offer or discount banner",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "targetType": { "type": "string", "enum": ["package", "service", "general"] },
+        "targetId": { "type": "string", "maxLength": 128 },
+        "discountPercentage": { "type": "number" },
+        "specialPrice": { "type": "number" },
+        "startDate": { "type": "string", "maxLength": 100 },
+        "endDate": { "type": "string", "maxLength": 100 },
+        "isActive": { "type": "boolean" },
+        "bannerBadgeText": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "title", "targetType", "endDate", "isActive"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Represents news or urgent announcements displayed across the app",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "message": { "type": "string", "maxLength": 2000 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "ctaText": { "type": "string", "maxLength": 100 },
+        "ctaLink": { "type": "string", "maxLength": 500 },
+        "expiryDate": { "type": "string", "maxLength": 100 },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "title", "message", "isActive"]
+    },
+    "ServiceItem": {
+      "title": "ServiceItem",
+      "description": "Represents a design service offered by the studio",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "category": { "type": "string", "maxLength": 100 },
+        "title": { "type": "string", "maxLength": 200 },
+        "shortDesc": { "type": "string", "maxLength": 500 },
+        "fullDesc": { "type": "string", "maxLength": 2000 },
+        "iconName": { "type": "string", "maxLength": 100 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "startingPrice": { "type": "number" },
+        "deliveryDays": { "type": "string", "maxLength": 100 },
+        "features": { "type": "array" }
+      },
+      "required": ["id", "category", "title", "startingPrice"]
+    },
+    "PortfolioProject": {
+      "title": "PortfolioProject",
+      "description": "Represents a showcase project in the design portfolio",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 100 },
+        "serviceCategory": { "type": "string", "maxLength": 100 },
+        "imageUrl": { "type": "string", "maxLength": 500 },
+        "additionalImages": { "type": "array" },
+        "clientName": { "type": "string", "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "tags": { "type": "array" },
+        "toolsUsed": { "type": "array" },
+        "year": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "title", "category", "imageUrl"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "Represents client feedback or reviews",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "clientName": { "type": "string", "maxLength": 200 },
+        "clientRole": { "type": "string", "maxLength": 200 },
+        "avatarUrl": { "type": "string", "maxLength": 500 },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "maxLength": 2000 },
+        "projectType": { "type": "string", "maxLength": 200 },
+        "date": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "clientName", "rating", "comment"]
+    },
+    "UsagePolicy": {
+      "title": "UsagePolicy",
+      "description": "Represents studio policies and terms for clients",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "key": { "type": "string", "maxLength": 100 },
+        "title": { "type": "string", "maxLength": 200 },
+        "icon": { "type": "string", "maxLength": 100 },
+        "summary": { "type": "string", "maxLength": 1000 },
+        "points": { "type": "array" }
+      },
+      "required": ["id", "key", "title", "summary"]
+    },
+    "PromptItem": {
+      "title": "PromptItem",
+      "description": "Represents an AI prompt in the prompt library",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 100 },
+        "promptText": { "type": "string", "maxLength": 5000 },
+        "arabicGuide": { "type": "string", "maxLength": 2000 },
+        "tags": { "type": "array" },
+        "recommendedModel": { "type": "string", "maxLength": 100 },
+        "aspectRatio": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "title", "promptText"]
+    },
+    "DesignerWorker": {
+      "title": "DesignerWorker",
+      "description": "Represents a designer team member with assigned tasks",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 200 },
+        "phone": { "type": "string", "maxLength": 50 },
+        "email": { "type": "string", "maxLength": 200 },
+        "password": { "type": "string", "maxLength": 200 },
+        "isActive": { "type": "boolean" },
+        "specialties": { "type": "array" },
+        "completedTasksCount": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "name", "phone", "isActive"]
+    },
+    "ClientTaskOrder": {
+      "title": "ClientTaskOrder",
+      "description": "Represents a client request or design task order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "orderNumber": { "type": "string", "maxLength": 100 },
+        "clientName": { "type": "string", "maxLength": 200 },
+        "clientPhone": { "type": "string", "maxLength": 50 },
+        "serviceCategory": { "type": "string", "maxLength": 100 },
+        "packageId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 300 },
+        "details": { "type": "string", "maxLength": 5000 },
+        "budget": { "type": "number" },
+        "deadline": { "type": "string", "maxLength": 100 },
+        "assignedDesignerId": { "type": "string", "maxLength": 128 },
+        "assignedDesignerName": { "type": "string", "maxLength": 200 },
+        "status": { "type": "string", "enum": ["new", "in_progress", "delivered", "completed", "cancelled"] },
+        "attachmentUrls": { "type": "array" },
+        "deliverableUrl": { "type": "string", "maxLength": 500 },
+        "designerNotes": { "type": "string", "maxLength": 2000 },
+        "adminNotes": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "maxLength": 100 },
+        "updatedAt": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "clientName", "clientPhone", "serviceCategory", "details", "status"]
+    },
+    "ContactSettings": {
+      "title": "ContactSettings",
+      "description": "Represents the contact settings and social links for the studio",
+      "type": "object",
+      "properties": {
+        "primaryPhone": { "type": "string", "maxLength": 50 },
+        "whatsappNumber": { "type": "string", "maxLength": 50 },
+        "whatsappMessage": { "type": "string", "maxLength": 1000 },
+        "email": { "type": "string", "maxLength": 200 },
+        "workingHours": { "type": "string", "maxLength": 200 },
+        "location": { "type": "string", "maxLength": 200 }
+      },
+      "required": ["primaryPhone", "whatsappNumber", "email"]
+    }
+  },
+  "firestore": {
+    "/packages/{packageId}": {
+      "schema": { "$ref": "#/entities/PricingPackage" },
+      "description": "Collection of pricing packages available for clients"
+    },
+    "/offers/{offerId}": {
+      "schema": { "$ref": "#/entities/TemporaryOffer" },
+      "description": "Active promotional offers and discounts"
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Top banners and urgent client notices"
+    },
+    "/services/{serviceId}": {
+      "schema": { "$ref": "#/entities/ServiceItem" },
+      "description": "Available graphic design service items"
+    },
+    "/portfolio/{projectId}": {
+      "schema": { "$ref": "#/entities/PortfolioProject" },
+      "description": "Showcase projects and creative works"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": { "$ref": "#/entities/Testimonial" },
+      "description": "Client reviews and ratings"
+    },
+    "/policies/{policyId}": {
+      "schema": { "$ref": "#/entities/UsagePolicy" },
+      "description": "Terms of service, revisions, and studio policies"
+    },
+    "/prompts/{promptId}": {
+      "schema": { "$ref": "#/entities/PromptItem" },
+      "description": "AI generative design prompt library"
+    },
+    "/designers/{designerId}": {
+      "schema": { "$ref": "#/entities/DesignerWorker" },
+      "description": "Designers and workers roster"
+    },
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/ClientTaskOrder" },
+      "description": "Client orders and production design tasks"
+    },
+    "/contact/{docId}": {
+      "schema": { "$ref": "#/entities/ContactSettings" },
+      "description": "Studio contact information and WhatsApp channels"
+    }
+  }
+}
