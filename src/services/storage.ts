@@ -14,7 +14,8 @@ import {
   TaskStatus,
 } from '../types';
 import { INITIAL_DATA } from '../data/initialData';
-import { db, handleFirestoreError, OperationType } from './firebase';
+import { db, auth, handleFirestoreError, OperationType } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import {
   collection,
   doc,
@@ -347,7 +348,11 @@ export const createClientQuickOrder = (data: {
   // Sync to Firestore
   try {
     setDoc(doc(db, 'tasks', newOrder.id), sanitizeForFirestore(newOrder)).catch((err) => {
-      handleFirestoreError(err, OperationType.CREATE, `tasks/${newOrder.id}`);
+      try {
+        handleFirestoreError(err, OperationType.CREATE, `tasks/${newOrder.id}`);
+      } catch (e) {
+        console.warn('Firestore write notice:', e);
+      }
     });
   } catch (err) {
     console.error('Error initiating Firestore write:', err);
@@ -372,7 +377,11 @@ export const createAdminTask = (task: Omit<ClientTaskOrder, 'id' | 'orderNumber'
   // Sync to Firestore
   try {
     setDoc(doc(db, 'tasks', newTask.id), sanitizeForFirestore(newTask)).catch((err) => {
-      handleFirestoreError(err, OperationType.CREATE, `tasks/${newTask.id}`);
+      try {
+        handleFirestoreError(err, OperationType.CREATE, `tasks/${newTask.id}`);
+      } catch (e) {
+        console.warn('Firestore task write notice:', e);
+      }
     });
   } catch (err) {
     console.error('Error initiating Firestore task write:', err);
@@ -426,7 +435,11 @@ export const updateTaskStatus = (
         ...(options?.adminNotes ? { adminNotes: options.adminNotes } : {}),
       });
       updateDoc(doc(db, 'tasks', taskId), updates).catch((err) => {
-        handleFirestoreError(err, OperationType.UPDATE, `tasks/${taskId}`);
+        try {
+          handleFirestoreError(err, OperationType.UPDATE, `tasks/${taskId}`);
+        } catch (e) {
+          console.warn('Firestore update notice:', e);
+        }
       });
     } catch (err) {
       console.error('Error updating Firestore task:', err);
@@ -460,7 +473,11 @@ export const assignTaskDesigner = (taskId: string, designerId: string): void => 
       updatedAt: now,
     });
     updateDoc(doc(db, 'tasks', taskId), updates).catch((err) => {
-      handleFirestoreError(err, OperationType.UPDATE, `tasks/${taskId}`);
+      try {
+        handleFirestoreError(err, OperationType.UPDATE, `tasks/${taskId}`);
+      } catch (e) {
+        console.warn('Firestore assignment notice:', e);
+      }
     });
   } catch (err) {
     console.error('Error assigning designer in Firestore:', err);
@@ -475,7 +492,11 @@ export const deleteTask = (taskId: string): void => {
   // Delete from Firestore
   try {
     deleteDoc(doc(db, 'tasks', taskId)).catch((err) => {
-      handleFirestoreError(err, OperationType.DELETE, `tasks/${taskId}`);
+      try {
+        handleFirestoreError(err, OperationType.DELETE, `tasks/${taskId}`);
+      } catch (e) {
+        console.warn('Firestore delete notice:', e);
+      }
     });
   } catch (err) {
     console.error('Error deleting task in Firestore:', err);
@@ -483,44 +504,67 @@ export const deleteTask = (taskId: string): void => {
 };
 
 // ---------------- FIRESTORE REAL-TIME SYNCHRONIZATION ----------------
+// Adheres strictly to Firebase skill: Only attach onSnapshot listeners if auth is ready and user is authenticated
+let unsubscribeTasksListener: (() => void) | null = null;
+
 if (typeof window !== 'undefined') {
   try {
-    const tasksCollectionRef = collection(db, 'tasks');
-    onSnapshot(
-      tasksCollectionRef,
-      (snapshot) => {
-        if (!snapshot.empty) {
-          const liveTasks: ClientTaskOrder[] = [];
-          snapshot.forEach((docSnap) => {
-            const data = docSnap.data() as ClientTaskOrder;
-            if (data && data.id) {
-              liveTasks.push(data);
-            }
-          });
-
-          if (liveTasks.length > 0) {
-            const currentState = getDatabaseState();
-            const taskMap = new Map<string, ClientTaskOrder>();
-            // Keep local fallback tasks
-            currentState.tasks.forEach((t) => taskMap.set(t.id, t));
-            // Layer on Firestore live tasks
-            liveTasks.forEach((t) => taskMap.set(t.id, t));
-
-            const merged = Array.from(taskMap.values()).sort(
-              (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-            );
-
-            currentState.tasks = merged;
-            saveDatabaseState(currentState);
-          }
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Authenticated user (admin or designer) -> attach real-time tasks listener
+        if (unsubscribeTasksListener) {
+          unsubscribeTasksListener();
+          unsubscribeTasksListener = null;
         }
-      },
-      (error) => {
-        handleFirestoreError(error, OperationType.LIST, 'tasks');
+
+        try {
+          const tasksCollectionRef = collection(db, 'tasks');
+          unsubscribeTasksListener = onSnapshot(
+            tasksCollectionRef,
+            (snapshot) => {
+              if (!snapshot.empty) {
+                const liveTasks: ClientTaskOrder[] = [];
+                snapshot.forEach((docSnap) => {
+                  const data = docSnap.data() as ClientTaskOrder;
+                  if (data && data.id) {
+                    liveTasks.push(data);
+                  }
+                });
+
+                if (liveTasks.length > 0) {
+                  const currentState = getDatabaseState();
+                  const taskMap = new Map<string, ClientTaskOrder>();
+                  // Keep local fallback tasks
+                  currentState.tasks.forEach((t) => taskMap.set(t.id, t));
+                  // Layer on Firestore live tasks
+                  liveTasks.forEach((t) => taskMap.set(t.id, t));
+
+                  const merged = Array.from(taskMap.values()).sort(
+                    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                  );
+
+                  currentState.tasks = merged;
+                  saveDatabaseState(currentState);
+                }
+              }
+            },
+            (error) => {
+              handleFirestoreError(error, OperationType.LIST, 'tasks');
+            }
+          );
+        } catch (err) {
+          console.warn('Failed to attach tasks listener:', err);
+        }
+      } else {
+        // Unauthenticated visitor: unsubscribe to respect access control and prevent permission errors
+        if (unsubscribeTasksListener) {
+          unsubscribeTasksListener();
+          unsubscribeTasksListener = null;
+        }
       }
-    );
+    });
   } catch (e) {
-    console.warn('Real-time tasks sync could not be initialized:', e);
+    console.warn('Real-time tasks auth watcher could not be initialized:', e);
   }
 }
 
